@@ -1,4 +1,5 @@
-import type { RefObject } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import type { RefObject, MouseEvent as ReactMouseEvent } from 'react';
 import { Bot, Send, Lightbulb, HelpCircle, TrendingDown, X, Loader2 } from 'lucide-react';
 import type { ChatMessage } from '../types';
 
@@ -85,6 +86,37 @@ export default function CopilotDrawer({
   onSendMessage,
   messagesEndRef
 }: CopilotDrawerProps) {
+  const [drawerWidth, setDrawerWidth] = useState(440);
+  const isDragging = useRef(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging.current) return;
+      // Subtracting approx 32px for the right offset
+      const newWidth = window.innerWidth - e.clientX - 32;
+      if (newWidth >= 320 && newWidth <= window.innerWidth * 0.9) {
+        setDrawerWidth(newWidth);
+      }
+    };
+    const handleMouseUp = () => {
+      if (isDragging.current) {
+        isDragging.current = false;
+        document.body.style.cursor = 'default';
+      }
+    };
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
+
+  const startResizing = (e: ReactMouseEvent) => {
+    isDragging.current = true;
+    document.body.style.cursor = 'col-resize';
+  };
+
   if (!isOpen) {
     return (
       <button className="copilot-floating-btn cortex-copilot-floating-trigger" onClick={onOpen} title="Ask Cortex Copilot">
@@ -98,7 +130,16 @@ export default function CopilotDrawer({
   }
 
   return (
-    <aside className="cortex-copilot-drawer overlay-mode">
+    <aside className="cortex-copilot-drawer overlay-mode" style={{ width: `${drawerWidth}px`, transition: isDragging.current ? 'none' : undefined }}>
+      <div 
+        onMouseDown={startResizing}
+        style={{
+          position: 'absolute', left: 0, top: 0, bottom: 0, width: '8px',
+          cursor: 'col-resize', zIndex: 10,
+          background: 'transparent' // invisible drag handle on the left edge
+        }}
+        title="Drag to resize"
+      />
       <header className="copilot-header">
         <div className="copilot-title">
           <span>Cortex Copilot</span>

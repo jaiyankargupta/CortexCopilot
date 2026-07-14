@@ -251,7 +251,7 @@ def format_human_timestamp(ts: Any) -> str:
         return ts.replace("T", " at ").split("+")[0]
 
 
-def generate_deterministic_narrative(tool_name: str, payload: Any, tenant_id: str, db: Optional[Session] = None) -> str:
+def generate_deterministic_narrative(tool_name: str, payload: Any, tenant_id: str, db: Optional[Session] = None, tool_args: Optional[Dict] = None) -> str:
     if isinstance(payload, dict) and "error" in payload:
         return f"**Analysis Status:** {payload['error']}"
 
@@ -298,7 +298,12 @@ def generate_deterministic_narrative(tool_name: str, payload: Any, tenant_id: st
 
     elif tool_name == "detect_system_anomalies":
         if not payload:
-            return f"**System Inspection Report:** No critical electrical anomalies detected for **{org_name}** during this window. All parameters are within safe operational limits."
+            atype = (tool_args or {}).get("anomaly_type", "all")
+            type_str = "electrical"
+            if atype == "pf": type_str = "Power Factor"
+            elif atype == "thd": type_str = "Harmonic (THD)"
+            elif atype == "demand": type_str = "Demand (kVA)"
+            return f"**System Inspection Report:** No critical {type_str} anomalies were detected for **{org_name}** during this window. All parameters for this category are within safe limits."
 
         summary_by_key = {}
         total_rupee_impact = 0.0
@@ -461,7 +466,7 @@ Your total bill is **₹5,33,406**. The main drivers:
     used_local_llm = False
 
     if tool_name in fast_deterministic_tools:
-        narrative_output = generate_deterministic_narrative(tool_name, payload, tenant_id, db=db)
+        narrative_output = generate_deterministic_narrative(tool_name, payload, tenant_id, db=db, tool_args=tool_args)
     else:
         try:
             async with httpx.AsyncClient(timeout=3.0) as client:
@@ -481,7 +486,7 @@ Your total bill is **₹5,33,406**. The main drivers:
             used_local_llm = False
 
         if not used_local_llm:
-            narrative_output = generate_deterministic_narrative(tool_name, payload, tenant_id, db=db)
+            narrative_output = generate_deterministic_narrative(tool_name, payload, tenant_id, db=db, tool_args=tool_args)
 
     payload_list = [payload] if isinstance(payload, dict) else payload
     if not isinstance(payload_list, list):

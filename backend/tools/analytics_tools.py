@@ -388,6 +388,16 @@ def get_recommendations_and_benchmarks(db: Session, tenant_id: str, anomalies: O
             "engineering_step": f"Redistribute single-phase auxiliary loads across R-Y-B phases to eliminate {len(imbalance_anomalies)} voltage imbalance events."
         })
 
+    thd_anomalies = [a for a in anomalies if a["type"] == "HARMONIC_DISTORTION_EXCURSION"]
+    if thd_anomalies:
+        calc_thd_savings = round(sum(abs(float(a.get("rupee_impact", 0))) for a in thd_anomalies), 2)
+        recs.append({
+            "action_title": "Install Active Harmonic Filters (AHF)",
+            "category": "POWER_QUALITY",
+            "estimated_monthly_savings_inr": max(calc_thd_savings, round(len(thd_anomalies) * 1500.0, 2)),
+            "engineering_step": f"Install active harmonic filters or detuned reactors to mitigate {len(thd_anomalies)} harmonic distortion excursions (THD) on induction/VFD feeders."
+        })
+
     cache_set(cache_key, recs, ttl_seconds=600)
     return recs
 
