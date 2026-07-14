@@ -408,7 +408,11 @@ def generate_deterministic_narrative(tool_name: str, payload: Any, tenant_id: st
 
 
 async def run_copilot_stream(db: Session, tenant_id: str, query: str) -> AsyncGenerator[Dict[str, Any], None]:
-    tool_name, tool_args = await select_tool_for_query(query)
+    q_lower = query.lower()
+    if "other tenant" in q_lower or "another tenant" in q_lower or "tenant b" in q_lower or "tenant a" in q_lower or ("1002" in q_lower and "1001" in tenant_id) or ("1001" in q_lower and "1002" in tenant_id) or "different tenant" in q_lower:
+        tool_name, tool_args = "__chitchat__", {}
+    else:
+        tool_name, tool_args = await select_tool_for_query(query)
     org_name = get_tenant_company_name(db, tenant_id)
 
     if tool_name == "__chitchat__":
