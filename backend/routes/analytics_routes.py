@@ -99,7 +99,8 @@ def get_dashboard_kpis(month_year: Optional[str] = None, db: Session = Depends(g
 
 @router.get("/dashboard/analytics")
 def get_dashboard_analytics(response: Response, time_range: str = "Today", db: Session = Depends(get_db), tenant_id: str = Depends(get_tenant_id_from_auth)):
-    response.headers["Cache-Control"] = "public, max-age=600"
+    response.headers["Cache-Control"] = "private, max-age=3600"
+    response.headers["Vary"] = "Authorization"
     target_id = resolve_db_tenant_id(tenant_id)
     cache_key = f"analytics:{tenant_id}:{time_range}"
     cached = cache_get(cache_key)
