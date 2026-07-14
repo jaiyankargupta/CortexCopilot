@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import type { RefObject, MouseEvent as ReactMouseEvent } from 'react';
+import type { RefObject } from 'react';
 import { Bot, Send, Lightbulb, HelpCircle, TrendingDown, X, Loader2 } from 'lucide-react';
 import type { ChatMessage } from '../types';
 
