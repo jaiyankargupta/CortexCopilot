@@ -23,7 +23,7 @@ I ultimately went with Qwen 2.5 (1.5B) because it's lightweight enough to run in
 ## Fine-Tuning the Model
 To get the model to understand Indian tariff logic and DISCOM terminology, I did some fine-tuning:
 - **The Dataset:** I generated a custom instruction dataset (`dataset.jsonl`) with over 300 Q/A pairs covering time-of-day tariffs, power factor penalties, IEEE-519 standards, and strict refusal cases.
-- **The Process:** I ran a LoRA adaptation on a Google Colab T4 GPU instance, targeting all the linear layers.
+- **The Process:** I ran a LoRA adaptation on a Google Colab T4 GPU instance, targeting all the linear layers. **[View the Unsloth Training Notebook](https://colab.research.google.com/drive/1UAw2rPq7EEmlg-uaZEPSgSlPywi3a7uc?usp=sharing)**
 - **The Model Weights:** The training dataset, tokenizer configurations, and fine-tuned LoRA adapter configs are included directly in the `Fine_Tunned_Model/` directory of this repository for review.
 
 ## What the System Found in the Data
