@@ -9,11 +9,11 @@ export default function BillingTab({ data }: BillingTabProps) {
   const billing = data.billing || {};
   const breakdown = billing.financial_breakdown_inr || {};
 
-  const totalBill = breakdown.estimated_total_bill || 533406.56;
-  const baseEnergy = breakdown.energy_charge || 313310.00;
-  const todSurcharge = breakdown.tod_surcharge || 58666.25;
-  const demandPenalty = breakdown.demand_penalty || 157740.00;
-  const pfAdjustment = breakdown.pf_adjustment || 3690.31;
+  const totalBill = breakdown.estimated_total_bill ?? 533406.56;
+  const baseEnergy = breakdown.energy_charge ?? 313310.00;
+  const todSurcharge = breakdown.tod_surcharge ?? 58666.25;
+  const demandPenalty = breakdown.demand_penalty ?? 157740.00;
+  const pfAdjustment = breakdown.pf_adjustment ?? 3690.31;
 
   return (
     <div className="rich-tab-view">

@@ -53,10 +53,8 @@ export default function RichAnalyticsDashboard({ tenantId, accessToken }: RichAn
       return;
     }
 
-    // Only show loading spinner on first load when we have no data at all
-    if (!analytics) {
-      setLoading(true);
-    }
+    setAnalytics(null);
+    setLoading(true);
     await fetchFreshData(cacheKey);
   };
 
