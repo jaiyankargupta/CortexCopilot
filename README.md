@@ -5,6 +5,8 @@
 
 # Cortex Copilot - Industrial Intelligence Assistant
 
+**[Live Frontend Demo](https://cortex-copilot-xyz.vercel.app/)**
+
 Hey there, This is my submission for the Cortex Copilot Engineering Challenge. 
 
 I built a secure, multi-tenant AI assistant designed to take raw factory electrical telemetry and translate it into plain-language insights for plant managers. Because the users are business owners and not electrical engineers, I needed to make sure the assistant never made up numbers. To solve this, I paired a fine-tuned LLM with a hardcoded, deterministic analytics engine. 
@@ -22,6 +24,7 @@ I ultimately went with Qwen 2.5 (1.5B) because it's lightweight enough to run in
 To get the model to understand Indian tariff logic and DISCOM terminology, I did some fine-tuning:
 - **The Dataset:** I generated a custom instruction dataset (`dataset.jsonl`) with over 300 Q/A pairs covering time-of-day tariffs, power factor penalties, IEEE-519 standards, and strict refusal cases.
 - **The Process:** I ran a LoRA adaptation on a Google Colab T4 GPU instance, targeting all the linear layers.
+- **The Model Weights:** The training dataset, tokenizer configurations, and fine-tuned LoRA adapter configs are included directly in the `Fine_Tunned_Model/` directory of this repository for review.
 
 ## What the System Found in the Data
 While building the analytics engine, I ran it against the provided mock workbook and found a few major issues hidden in the data:
@@ -42,5 +45,6 @@ If you want to test the isolation yourself, you can log in with:
 - **Tenant B:** 1002 / cortex123
 
 ## Deployment Note
-Just a quick heads-up on the live link: Hugging Face very recently changed their pricing model and completely removed their free Docker compute tier. Because my personal laptop doesn't have the memory to host the fine-tuned LLM 24/7
+Just a quick heads-up on the live link: The frontend is completely hosted on Vercel (**[https://cortex-copilot-xyz.vercel.app/](https://cortex-copilot-xyz.vercel.app/)**). 
 
+To securely connect the Vercel frontend to the heavy local Python backend (which runs the fine-tuned LLM), the system uses a **Cloudflare Tunnel (`cloudflared`)**. This provides a secure, zero-trust connection that bypasses restrictive CORS preflight issues inherent to other tunneling solutions like Ngrok!

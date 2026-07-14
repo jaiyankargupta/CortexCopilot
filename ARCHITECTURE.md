@@ -14,7 +14,7 @@ My main goal was to completely eliminate LLM hallucinations while maintaining st
 ```mermaid
 graph TD
     User([Plant Manager]) -->|Asks Question| UI[React / Vite Frontend]
-    UI -->|API Request| Gateway[FastAPI Gateway]
+    UI -->|API Request via Cloudflare Tunnel| Gateway[FastAPI Gateway]
     
     subgraph Backend Server
         Gateway -->|Resolves Tenant ID| Auth{Tenant Auth}
@@ -42,11 +42,13 @@ graph TD
 
 ## How the Components Work Together
 
-### 1. The Frontend (React + Vite)
-This is the user-facing dashboard. It handles tenant logins, displays the proactive "Insights Panel" (which is populated directly by the analytics engine), and manages the chat interface using Server-Sent Events (SSE) so the text streams in smoothly just like ChatGPT.
+### 1. The Frontend (React + Vite, on Vercel)
+This is the user-facing dashboard hosted on Vercel. It handles tenant logins, displays the proactive "Insights Panel" (which is populated directly by the analytics engine), and manages the chat interface using Server-Sent Events (SSE) so the text streams in smoothly just like ChatGPT.
 
-### 2. The Gateway (FastAPI)
-The backend gateway handles all authentication. Before any data is processed, it grabs the authenticated user's `tenant_id` and strictly scopes all database and analytics queries to that specific ID. This makes cross-tenant data leaks practically impossible at the routing level.
+### 2. Cloudflare Tunnel & Gateway (FastAPI)
+Because the frontend is hosted on Vercel and the backend (with the heavy LLM) runs locally, a **Cloudflare Tunnel** securely bridges the gap. It flawlessly handles cross-origin preflight requests without injecting warning pages (unlike Ngrok). 
+
+Once the tunnel passes the request to the FastAPI gateway, the gateway handles authentication. Before any data is processed, it grabs the authenticated user's `tenant_id` and strictly scopes all database and analytics queries to that specific ID. This makes cross-tenant data leaks practically impossible at the routing level.
 
 ### 3. Caching Layer (Redis)
 To minimize latency and reduce redundant computations, a Redis cache sits alongside the router and authentication layer. It actively caches complex user queries, mapped intents, and tenant metadata. If a user asks a similar question twice, Redis serves the exact tool routing instantly, bypassing the need for string parsing or LLM classification.
