@@ -112,7 +112,7 @@ export default function CopilotDrawer({
     };
   }, []);
 
-  const startResizing = (e: ReactMouseEvent) => {
+  const startResizing = () => {
     isDragging.current = true;
     document.body.style.cursor = 'col-resize';
   };
