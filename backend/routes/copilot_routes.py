@@ -7,6 +7,7 @@ import json
 from db.database import get_db
 from models.models import AuditLog
 from orchestrator.agent import run_copilot_stream
+from routes.analytics_routes import get_tenant_id_from_auth
 
 router = APIRouter(prefix="/api/v1/copilot", tags=["Copilot"])
 
@@ -17,7 +18,7 @@ class ChatRequest(BaseModel):
 
 
 @router.post("/chat")
-async def chat_stream(req: ChatRequest, tenant_id: str = "T_STEEL_DURGAPUR", db: Session = Depends(get_db)):
+async def chat_stream(req: ChatRequest, tenant_id: str = Depends(get_tenant_id_from_auth), db: Session = Depends(get_db)):
     start_time = time.time()
 
     async def event_generator():
