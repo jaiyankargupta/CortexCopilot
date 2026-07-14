@@ -1,0 +1,216 @@
+{
+  "injection_signals": [
+    "ignore previous",
+    "forget everything",
+    "disregard",
+    "pretend you are",
+    "roleplay",
+    "act as",
+    "you are now",
+    "system prompt",
+    "reveal your",
+    "show me your prompt"
+  ],
+  "high_priority_rules": [
+    {
+      "keywords_any": [
+        "pf",
+        "power factor"
+      ],
+      "triggers_any": [
+        "drop",
+        "low",
+        "fell",
+        "gir",
+        "kam",
+        "below",
+        "cause",
+        "why",
+        "reason",
+        "abnormal"
+      ],
+      "target_tool": "detect_system_anomalies",
+      "target_args": {
+        "anomaly_type": "pf",
+        "days": 30
+      }
+    },
+    {
+      "keywords_any": [
+        "thd",
+        "harmonic",
+        "harmonics"
+      ],
+      "triggers_any": [
+        "what",
+        "explain",
+        "meaning",
+        "kya",
+        "define",
+        "mean"
+      ],
+      "target_tool": "get_canonical_explanations",
+      "target_args": {
+        "concept": "thd"
+      }
+    },
+    {
+      "keywords_any": [
+        "thd",
+        "harmonic",
+        "harmonics"
+      ],
+      "target_tool": "detect_system_anomalies",
+      "target_args": {
+        "anomaly_type": "thd",
+        "days": 30
+      }
+    },
+    {
+      "triggers_any": [
+        "financial impact",
+        "rupee impact",
+        "total impact",
+        "financial penalty"
+      ],
+      "target_tool": "detect_system_anomalies",
+      "target_args": {
+        "anomaly_type": "all",
+        "days": 30
+      }
+    }
+  ],
+  "lexicons": {
+    "ANOMALY": [
+      "anomaly",
+      "anomalies",
+      "abnormal",
+      "abnormalities",
+      "abnormality",
+      "violation",
+      "violations",
+      "spike",
+      "spikes",
+      "imbalance",
+      "fault",
+      "faults",
+      "faulty",
+      "alert",
+      "alerts",
+      "warning",
+      "warnings",
+      "critical",
+      "exceed",
+      "exceeded",
+      "wrong",
+      "problem",
+      "problems",
+      "issue",
+      "issues",
+      "unusual",
+      "irregular",
+      "irregularities",
+      "dangerous",
+      "safe",
+      "limit",
+      "health",
+      "diagnosis",
+      "inspection"
+    ],
+    "BILLING": [
+      "bill",
+      "billing",
+      "cost",
+      "charge",
+      "charges",
+      "rupee",
+      "rupees",
+      "inr",
+      "penalty",
+      "penalties",
+      "tariff",
+      "money",
+      "expensive",
+      "paisa",
+      "kharcha",
+      "invoice",
+      "surcharge",
+      "spend"
+    ],
+    "RECOMMENDATIONS": [
+      "recommend",
+      "recommendation",
+      "recommendations",
+      "save",
+      "saving",
+      "savings",
+      "reduce",
+      "tip",
+      "tips",
+      "advice",
+      "optimize",
+      "efficiency",
+      "improve",
+      "roi"
+    ],
+    "SUMMARY": [
+      "energy",
+      "consumption",
+      "kwh",
+      "units",
+      "unit",
+      "usage",
+      "load"
+    ]
+  },
+  "phrase_boosts": {
+    "ANOMALY": [
+      "what's wrong",
+      "whats wrong",
+      "system health",
+      "any problem",
+      "koi problem",
+      "check health"
+    ],
+    "BILLING": [
+      "bill high",
+      "higher this month",
+      "kitna aaya",
+      "bijli ka bill"
+    ],
+    "RECOMMENDATIONS": [
+      "how to save",
+      "how to reduce",
+      "how can i reduce",
+      "reduce energy",
+      "reduce consumption",
+      "reduce electricity",
+      "energy save",
+      "reduce cost"
+    ],
+    "EXPLAIN": [
+      "what is",
+      "what does",
+      "what are",
+      "define",
+      "explain",
+      "meaning of",
+      "kya hai",
+      "kya hota"
+    ],
+    "SUMMARY": [
+      "total energy",
+      "energy today",
+      "how much energy",
+      "total kwh",
+      "consumption today"
+    ]
+  },
+  "chitchat_signals": [
+    "hi",
+    "hello",
+    "hey",
+    "help",
+    "kaise ho"
+  ]
+}
