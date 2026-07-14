@@ -1,3 +1,8 @@
+<div align="center">
+  <b>README</b>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="ARCHITECTURE.md">Architecture</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="EVALUATION.md">Evaluation</a>
+</div>
+<br>
+
 # Cortex Copilot - Industrial Intelligence Assistant
 
 Hey there, This is my submission for the Cortex Copilot Engineering Challenge. 

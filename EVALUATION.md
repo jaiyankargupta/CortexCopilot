@@ -1,3 +1,8 @@
+<div align="center">
+  <a href="README.md">README</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="ARCHITECTURE.md">Architecture</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<b>Evaluation</b>
+</div>
+<br>
+
 # Evaluation Report
 
 To figure out which model would work best for Cortex Copilot and whether fine-tuning actually made a difference, I set up a local benchmark to test the system.
