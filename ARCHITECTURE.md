@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="README.md">README</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<b>Architecture</b>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="EVALUATION.md">Evaluation</a>
+  <a href="README.md">README</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<b>Architecture</b>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="EVALUATION.md">Evaluation</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="SCALING_PLAN.md">Scaling Plan</a>
 </div>
 <br>
 

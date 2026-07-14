@@ -1,5 +1,5 @@
 <div align="center">
-  <b>README</b>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="ARCHITECTURE.md">Architecture</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="EVALUATION.md">Evaluation</a>
+  <b>README</b>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="ARCHITECTURE.md">Architecture</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="EVALUATION.md">Evaluation</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="SCALING_PLAN.md">Scaling Plan</a>
 </div>
 <br>
 
@@ -42,12 +42,5 @@ If you want to test the isolation yourself, you can log in with:
 - **Tenant B:** admin_b@tenant.com / password123
 
 ## Deployment Note
-Just a quick heads-up on the live link: Hugging Face very recently changed their pricing model and completely removed their free Docker compute tier. Because my personal laptop doesn't have the memory to host the fine-tuned LLM 24/7, I've had to get creative.
+Just a quick heads-up on the live link: Hugging Face very recently changed their pricing model and completely removed their free Docker compute tier. Because my personal laptop doesn't have the memory to host the fine-tuned LLM 24/7
 
-Right now, the frontend is deployed on Vercel, but the backend and the Ollama model are running via a tunneled Google Colab instance using Ngrok. Colab instances automatically die after 12 hours, so if the link is down when you are grading this, please check out my demo video to see it working, or just shoot me an email and I'll spin the server back up in 60 seconds!
-
-## What I'd Do With Two More Weeks
-If I had more time to take this to a production Tier 4 level, here is my scaling plan:
-1. **Real-Time Ingestion:** I'd drop the Excel parser and wire up a Kafka + TimescaleDB pipeline for streaming telemetry.
-2. **Automated Retraining:** I'd add a thumbs up/down button in the UI, save that feedback to Postgres, and use an Airflow DAG to automatically trigger incremental QLoRA fine-tuning every week on the queries the model struggled with.
-3. **Advanced RAG:** I would integrate PGVector to allow the Copilot to pull specific clauses directly from massive PDF tariff documents.
