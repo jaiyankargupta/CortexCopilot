@@ -38,8 +38,8 @@ To prove that tenants can't access each other's data, I derived a second tenant 
 - **Tenant B (Textile Unit):** I derived this by shifting the timestamps, scaling the energy usage down by 40%, renaming the machine groups (e.g., Air Compressors instead of Furnaces), and changing the tariff to match Tamil Nadu HT rates.
 
 If you want to test the isolation yourself, you can log in with:
-- **Tenant A:** admin_a@tenant.com / password123
-- **Tenant B:** admin_b@tenant.com / password123
+- **Tenant A:** 1001 / cortex123
+- **Tenant B:** 1002 / cortex123
 
 ## Deployment Note
 Just a quick heads-up on the live link: Hugging Face very recently changed their pricing model and completely removed their free Docker compute tier. Because my personal laptop doesn't have the memory to host the fine-tuned LLM 24/7

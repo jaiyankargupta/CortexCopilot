@@ -127,7 +127,7 @@ export default function App() {
         setAccessToken(activeToken);
         localStorage.setItem('cortex_access_token', activeToken);
         if (authData.user?.company_name || authData.company_name) {
-          localStorage.setItem('cortex_active_tenant_name', authData.user?.company_name || authData.company_name);
+          localStorage.setItem('cortex_active_tenant_name', (authData.user?.company_name || authData.company_name) as string);
         }
       }
       const timeRange = 'Today';

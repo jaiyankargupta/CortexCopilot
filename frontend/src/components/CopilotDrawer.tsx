@@ -1,5 +1,5 @@
 import type { RefObject } from 'react';
-import { Bot, Send, CheckCircle2, AlertCircle, Lightbulb, HelpCircle, TrendingDown, X, Loader2 } from 'lucide-react';
+import { Bot, Send, Lightbulb, HelpCircle, TrendingDown, X, Loader2 } from 'lucide-react';
 import type { ChatMessage } from '../types';
 
 interface CopilotDrawerProps {
