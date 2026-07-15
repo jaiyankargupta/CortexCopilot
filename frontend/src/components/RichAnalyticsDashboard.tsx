@@ -24,7 +24,7 @@ import { getDashboardAnalytics, API_BASE_URL } from '../api';
 import { analyticsCache } from '../api/cache';
 
 export default function RichAnalyticsDashboard({ tenantId, accessToken }: RichAnalyticsDashboardProps) {
-  const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null);
+  const [analyticsMap, setAnalyticsMap] = useState<Record<string, DashboardAnalytics>>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [activeTab, setActiveTab] = useState<'power' | 'insights' | 'anomaly' | 'billing' | 'alerts' | 'settings'>('power');
   const [activeCard, setActiveCard] = useState<'overview' | 'active_apparent' | 'tod' | 'pf' | 'cd' | 'phase'>('overview');
@@ -40,37 +40,64 @@ export default function RichAnalyticsDashboard({ tenantId, accessToken }: RichAn
   });
 
   useEffect(() => {
-    fetchAnalyticsData();
-  }, [tenantId, timeRange]);
+    fetchAllAnalyticsData();
+  }, [tenantId, accessToken]);
 
-  const fetchAnalyticsData = async () => {
-    const cacheKey = `${tenantId}_${timeRange}`;
-    if (analyticsCache[cacheKey]) {
-      setAnalytics(analyticsCache[cacheKey]);
-      setLoading(false);
-      // Fetch in background to update cache without showing loading spinner
-      fetchFreshData(cacheKey);
-      return;
-    }
-
-    setAnalytics(null);
+  const fetchAllAnalyticsData = async () => {
     setLoading(true);
-    await fetchFreshData(cacheKey);
-  };
-
-  const fetchFreshData = async (cacheKey: string) => {
-    try {
-      const data = await getDashboardAnalytics(timeRange, accessToken);
-      analyticsCache[cacheKey] = data;
-      setAnalytics(data);
-    } catch (err) {
-      console.warn('Failed to fetch dashboard rich analytics:', err);
-    } finally {
+    
+    // 1. Fetch Today first so dashboard loads immediately
+    const todayCacheKey = `${tenantId}_Today`;
+    if (analyticsCache[todayCacheKey]) {
+      setAnalyticsMap(prev => ({ ...prev, Today: analyticsCache[todayCacheKey] }));
       setLoading(false);
+      // Fetch fresh in background
+      fetchSingleRangeData('Today');
+    } else {
+      try {
+        const data = await getDashboardAnalytics('Today', accessToken);
+        analyticsCache[todayCacheKey] = data;
+        setAnalyticsMap(prev => ({ ...prev, Today: data }));
+        setLoading(false);
+      } catch (err) {
+        console.warn('Failed to fetch Today analytics:', err);
+        setLoading(false);
+      }
+    }
+
+    // 2. Prefetch other ranges in background
+    const otherRanges: Array<'This Week' | 'This Month' | 'Last Month'> = ['This Week', 'This Month', 'Last Month'];
+    for (const range of otherRanges) {
+      const cacheKey = `${tenantId}_${range}`;
+      if (analyticsCache[cacheKey]) {
+        setAnalyticsMap(prev => ({ ...prev, [range]: analyticsCache[cacheKey] }));
+        fetchSingleRangeData(range);
+      } else {
+        try {
+          const data = await getDashboardAnalytics(range, accessToken);
+          analyticsCache[cacheKey] = data;
+          setAnalyticsMap(prev => ({ ...prev, [range]: data }));
+        } catch (err) {
+          console.warn(`Failed to prefetch ${range} analytics:`, err);
+        }
+      }
     }
   };
 
-  if (loading && !analytics) {
+  const fetchSingleRangeData = async (range: 'Today' | 'This Week' | 'This Month' | 'Last Month') => {
+    try {
+      const data = await getDashboardAnalytics(range, accessToken);
+      const cacheKey = `${tenantId}_${range}`;
+      analyticsCache[cacheKey] = data;
+      setAnalyticsMap(prev => ({ ...prev, [range]: data }));
+    } catch (err) {
+      console.warn(`Failed to fetch fresh data for ${range}:`, err);
+    }
+  };
+
+  const data = analyticsMap[timeRange];
+
+  if (loading && !data) {
     return (
       <div className="rich-loading-wrapper">
         <div className="rich-loading-card">
@@ -88,12 +115,12 @@ export default function RichAnalyticsDashboard({ tenantId, accessToken }: RichAn
     );
   }
 
-  if (!analytics) {
+  if (!data) {
     return (
       <div className="rich-loading-state" style={{ flexDirection: 'column', gap: '1rem' }}>
         <span>No telemetry data available for this selection.</span>
         <button
-          onClick={fetchAnalyticsData}
+          onClick={fetchAllAnalyticsData}
           style={{
             padding: '0.5rem 1.2rem',
             borderRadius: '6px',
@@ -109,8 +136,6 @@ export default function RichAnalyticsDashboard({ tenantId, accessToken }: RichAn
       </div>
     );
   }
-
-  const data: DashboardAnalytics = analytics;
 
 
   return (
